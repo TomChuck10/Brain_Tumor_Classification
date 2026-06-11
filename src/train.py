@@ -1,4 +1,4 @@
-"""Trening ResNet50 (transfer learning): train → val → checkpoint → finalny test."""
+#Trening ResNet50 (transfer learning): train → val → checkpoint → finalny test
 
 import matplotlib.pyplot as plt
 import torch
@@ -31,7 +31,7 @@ def train_one_epoch(
         images = images.to(device, non_blocking=True)
         labels = labels.to(device, non_blocking=True)
 
-        optimizer.zero_grad()         # gradienty się kumulują — zerujemy co batch
+        optimizer.zero_grad()         # gradienty się kumulują —> zerujemy co batch
         outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
@@ -52,7 +52,7 @@ def evaluate(
     criterion: nn.Module,
     device: torch.device,
 ) -> tuple[float, float]:
-    """Walidacja lub test — model.eval() + bez gradientów."""
+    #Walidacja lub test — model.eval() + bez gradientow
     model.eval()
     running_loss = 0.0
     correct = total = 0
@@ -120,11 +120,11 @@ def run_training(
     model = build_resnet50(num_classes=num_classes, freeze_backbone=True).to(device)
     criterion = nn.CrossEntropyLoss()
 
-    # Tylko parametry uczone — backbone jest zamrożony (requires_grad=False).
+    # Tylko parametry uczone, bo backbone jest zamrożony (requires_grad=False)
     trainable_params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.Adam(trainable_params, lr=learning_rate)
 
-    # Gdy val_loss nie spada przez 2 epoki, tnie lr 10× — wygładza skoki.
+    # Gdy val_loss nie spada przez 2 epoki, tnie lr 10× — wygładza skoki
     scheduler = ReduceLROnPlateau(optimizer, mode="min", factor=0.1, patience=2)
 
     history = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
@@ -157,7 +157,7 @@ def run_training(
             end="",
         )
 
-        # Checkpoint po val_acc; zapisujemy state_dict (przenośne).
+        # Checkpoint po val_acc -> zapisujemy state_dict (przenośne).
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             torch.save(model.state_dict(), best_model_path)
@@ -171,7 +171,7 @@ def run_training(
 
     plot_curves(history, REPORTS_DIR / "training_curves_resnet50.png")
 
-    # Finalna, uczciwa ocena: najlepsze wagi na zbiorze testowym (wcześniej nieużywanym).
+    # Finalna uczciwa ocena. Najlepsze wagi na zbiorze testowym, który wcześniej był nieużywany
     print("\n" + "=" * 70)
     print("FINALNA OCENA NA ZBIORZE TESTOWYM (Kaggle 'Testing')")
     print("=" * 70)
@@ -188,5 +188,5 @@ if __name__ == "__main__":
         batch_size=32,
         learning_rate=1e-3,
         image_size=224,
-        num_workers=0,   # 0 = bezpieczne dla Windows
+        num_workers=0,   # 0 = bezpieczne dla windows / sprawdzić w przyszlosci dla 4!!!
     )

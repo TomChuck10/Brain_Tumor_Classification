@@ -1,4 +1,4 @@
-"""Transfer learning: ResNet50 (ImageNet) z zamrożonym backbone i nową głowicą FC."""
+#Transfer learning: ResNet50 (ImageNet) z zamrożonym backbone i nową głowicą FC
 
 import torch
 import torch.nn as nn
@@ -7,16 +7,16 @@ from torchvision.models import ResNet50_Weights
 
 
 def build_resnet50(num_classes: int = 4, freeze_backbone: bool = True) -> nn.Module:
-    """ResNet50 z wagami ImageNet; backbone zamrożony, uczy się tylko nowa warstwa fc."""
+    # ResNet50 z wagami ImageNet; backbone zamrożony, uczy się tylko nowa warstwa fc
     weights = ResNet50_Weights.IMAGENET1K_V2
     model = models.resnet50(weights=weights)
 
-    # Zamrożony backbone — uczymy tylko nową głowicę, nie psując cech z ImageNet.
+    # Zamrożony backbone — uczymy tylko nową głowicę, nie psując cech z ImageNet
     if freeze_backbone:
         for param in model.parameters():
             param.requires_grad = False
 
-    # Nowa warstwa (requires_grad=True) dopasowana do num_classes. Bez softmaxu.
+    # Nowa warstwa (requires_grad=True) dopasowana do num_classes. Bez softmaxu
     in_features = model.fc.in_features
     model.fc = nn.Linear(in_features, num_classes)
 
@@ -24,7 +24,7 @@ def build_resnet50(num_classes: int = 4, freeze_backbone: bool = True) -> nn.Mod
 
 
 if __name__ == "__main__":
-    # Sanity check: pobranie wag (raz) + kształt wyjścia (N, 4).
+    # Sanity check: pobranie wag (raz) + kształt wyjścia (N, 4)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Urządzenie: {device}")
 

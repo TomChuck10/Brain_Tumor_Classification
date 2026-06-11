@@ -1,4 +1,4 @@
-"""Wczytywanie danych MRI i budowa DataLoaderów (train / val / test)."""
+#Wczytywanie danych MRI i budowa DataLoaderów (train / val / test)
 
 import sys
 from pathlib import Path
@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_TRAIN   = PROJECT_ROOT / "data" / "raw" / "Training"
 DATA_TEST    = PROJECT_ROOT / "data" / "raw" / "Testing"
 
-# ResNet50 wymaga wejścia znormalizowanego dokładnie statystykami ImageNet.
+# ResNet50 wymaga wejścia znormalizowanego dokładnie statystykami ImageNet
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
 
@@ -46,7 +46,7 @@ def prepare_dataloaders(
     num_workers: int = 0,
     seed: int = 42,
 ) -> tuple[DataLoader, DataLoader, DataLoader, list[str]]:
-    """Train/val wydzielone z folderu Training; test = osobny folder Testing (nietknięty)."""
+    # Train/val wydzielone z folderu Training, test = osobny folder Testing (nietknięty)
     train_tf, eval_tf = build_transforms(image_size)
 
     # Osobny ImageFolder bez augmentacji, żeby walidacja nie była augmentowana.
@@ -113,7 +113,7 @@ def print_summary(
 
 
 def _denormalize(tensor: torch.Tensor) -> np.ndarray:
-    """Odwraca Normalize() — bez tego obraz na wykresie ma przekłamane kolory."""
+    # Odwraca Normalize() — bez tego obraz na wykresie ma przekłamane kolory
     mean = torch.tensor(IMAGENET_MEAN).view(3, 1, 1)
     std  = torch.tensor(IMAGENET_STD).view(3, 1, 1)
     img = (tensor * std + mean).clamp(0.0, 1.0)
@@ -147,7 +147,7 @@ def show_sample_grid(loader: DataLoader, class_names: list[str], n_images: int =
 def main() -> None:
     IMAGE_SIZE  = 224
     BATCH_SIZE  = 32
-    NUM_WORKERS = 0   # 0 = bezpieczne dla Windows
+    NUM_WORKERS = 0   # 0 = bezpieczne dla windows (później można podbić do 4!!!)
 
     for path, name in [(DATA_TRAIN, "Training"), (DATA_TEST, "Testing")]:
         if not path.exists():

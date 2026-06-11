@@ -1,11 +1,11 @@
-"""Model bazowy (Baseline CNN) — punkt odniesienia dla transfer learningu."""
+#Model bazowy (Baseline CNN) — punkt odniesienia dla transfer learningu
 
 import torch
 import torch.nn as nn
 
 
 class BaselineCNN(nn.Module):
-    """Prosta CNN: 4 bloki Conv-BN-ReLU-Pool + klasyfikator. Zwraca logity (bez softmaxu)."""
+    #Prosta CNN: 4 bloki Conv-BN-ReLU-Pool + klasyfikator. Zwraca logity (bez softmaxu)
 
     def __init__(self, num_classes: int = 4, in_channels: int = 3):
         super().__init__()
